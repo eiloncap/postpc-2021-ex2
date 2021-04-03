@@ -24,12 +24,78 @@ public class SimpleCalculatorImplTest {
     assertEquals("0+", calculatorUnderTest.output());
   }
 
-
   @Test
   public void when_inputIsMinus_then_outputShouldBeCorrect(){
     SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
     calculatorUnderTest.insertMinus();
-    String expected = "???"; // TODO: decide the expected output when having a single minus
+    String expected = "0-";
+    assertEquals(expected, calculatorUnderTest.output());
+  }
+
+  @Test
+  public void when_inputIsEqualsAfterSingleNumber_then_outputShouldBeTheNumber(){
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertDigit(3);
+    calculatorUnderTest.insertEquals();
+    String expected = "13";
+    assertEquals(expected, calculatorUnderTest.output());
+  }
+
+  @Test
+  public void when_inputIsEqualsAfterOperator_then_operatorShouldBeIgnored(){
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertDigit(4);
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(2);
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertEquals();
+    String expected = "35";
+    assertEquals(expected, calculatorUnderTest.output());
+  }
+
+  @Test
+  public void when_inputIsOperatorAfterDifferentOperator_then_secondOperatorShouldBeIgnored(){
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+    calculatorUnderTest.insertDigit(5);
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertMinus();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertDigit(2);
+    assertEquals("51+12", calculatorUnderTest.output());
+    calculatorUnderTest.insertEquals();
+    String expected = "63";
+    assertEquals(expected, calculatorUnderTest.output());
+  }
+
+  @Test
+  public void when_inputIsDigitAfterEquals_then_digitShouldReset(){
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertMinus();
+    calculatorUnderTest.insertDigit(2);
+    calculatorUnderTest.insertEquals();
+    calculatorUnderTest.insertDigit(4);
+    assertEquals("4", calculatorUnderTest.output());
+    calculatorUnderTest.insertEquals();
+    String expected = "4";
+    assertEquals(expected, calculatorUnderTest.output());
+  }
+
+  @Test
+  public void when_inputIsAfterEquals_then_calculationShouldBeCorrect(){
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertMinus();
+    calculatorUnderTest.insertDigit(2);
+    calculatorUnderTest.insertEquals();
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(4);
+    assertEquals("-1+4", calculatorUnderTest.output());
+    calculatorUnderTest.insertEquals();
+    String expected = "3";
     assertEquals(expected, calculatorUnderTest.output());
   }
 

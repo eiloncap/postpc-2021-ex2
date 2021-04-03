@@ -9,7 +9,7 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
 
     private String stateStr = DEFAULT_STATE;
     private int calculatedValue = 0, lastValue = 0;
-    private boolean isLAstOperatorMinus = false;
+    private boolean isLAstOperatorMinus = false, init = true;
 
     @Override
     public String output() {
@@ -17,10 +17,16 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
     }
 
     @Override
-    public void insertDigit(int digit) {
+    public void insertDigit(int digit) throws IllegalArgumentException{
+        if (digit < 0 || digit > 9) {
+            throw new IllegalArgumentException("Digit must be a number between 0 to 9.");
+        }
         String digitAsString = Integer.toString(digit);
-        stateStr = stateStr.equals(DEFAULT_STATE) ? digitAsString : stateStr + digitAsString;
-        lastValue = (lastValue * 10) + digit * Integer.signum(lastValue);
+        int sign = lastValue >= 0 ? 1 : -1;
+        if (init) calculatedValue = 0;
+        stateStr = init ? digitAsString : stateStr + digitAsString;
+        lastValue = (lastValue * 10) + digit * sign;
+        init = false;
     }
 
     @Override
@@ -29,6 +35,7 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
             stateStr += "+";
             calculateLastOperator();
             isLAstOperatorMinus = false;
+            init = false;
         }
     }
 
@@ -38,18 +45,16 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
             stateStr += "-";
             calculateLastOperator();
             isLAstOperatorMinus = true;
+            init = false;
         }
     }
 
     @Override
     public void insertEquals() {
-        // todo: calculate the equation. after calling `insertEquals()`, the output should be the result
-        //  e.g. given input "14+3", calling `insertEquals()`, and calling `output()`, output should be "17"
         calculateLastOperator();
         isLAstOperatorMinus = false;
         stateStr = Integer.toString(calculatedValue);
-        lastValue = calculatedValue;
-        calculatedValue = 0;
+        init = true;
     }
 
     private void calculateLastOperator() {
