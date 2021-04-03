@@ -85,7 +85,7 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
         CalculatorState state = new CalculatorState();
         state.stateStr = stateStr;
         state.isLastOperatorMinus = isLastOperatorMinus;
-        state.values = values;
+        state.values = new LinkedList<>(values);
         return state;
     }
 
@@ -97,12 +97,11 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
         CalculatorState casted = (CalculatorState) prevState;
         stateStr = casted.stateStr;
         isLastOperatorMinus = casted.isLastOperatorMinus;
-        values = casted.values;
+        values = new LinkedList<>(casted.values);
     }
 
     private static class CalculatorState implements Serializable {
         /*
-        TODO: add fields to this class that will store the calculator state
         all fields must only be from the types:
         - primitives (e.g. int, boolean, etc)
         - String
