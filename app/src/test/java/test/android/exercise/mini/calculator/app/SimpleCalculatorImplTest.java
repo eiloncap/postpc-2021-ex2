@@ -167,9 +167,37 @@ public class SimpleCalculatorImplTest {
   }
 
   @Test
+  public void when_callingDeleteLastWithoutInput_then_outputShouldBeZero(){
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+
+    // no input at all
+    calculatorUnderTest.deleteLast();
+    assertEquals("0", calculatorUnderTest.output());
+    calculatorUnderTest.insertEquals();
+    assertEquals("0", calculatorUnderTest.output());
+
+    // delete all input
+    calculatorUnderTest.deleteLast();
+    assertEquals("0", calculatorUnderTest.output());
+    calculatorUnderTest.insertEquals();
+    assertEquals("0", calculatorUnderTest.output());
+  }
+
+  @Test
   public void when_callingDeleteLast_then_lastOutputShouldBeDeleted(){
     SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
     calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertDigit(5);
+    calculatorUnderTest.insertEquals();
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(2);
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(3);
+    calculatorUnderTest.deleteLast();
+    calculatorUnderTest.deleteLast();
+    calculatorUnderTest.deleteLast();
+    calculatorUnderTest.deleteLast();
+    calculatorUnderTest.deleteLast();
     calculatorUnderTest.deleteLast();
     assertEquals("0", calculatorUnderTest.output());
     calculatorUnderTest.insertEquals();
