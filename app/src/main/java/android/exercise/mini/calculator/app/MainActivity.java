@@ -8,10 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.Serializable;
+
 public class MainActivity extends AppCompatActivity {
+
+    private final static String DEFAULT_STATE = "state";
 
     @VisibleForTesting
     public SimpleCalculator calculator;
+    private TextView textViewCalculatorOutput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,39 +28,70 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // find all views
-        TextView textViewCalculatorOutput = findViewById(R.id.textViewCalculatorOutput),
-                button0 = findViewById(R.id.button0),
-                button1 = findViewById(R.id.button1),
-                button2 = findViewById(R.id.button2),
-                button3 = findViewById(R.id.button3),
-                button4 = findViewById(R.id.button4),
-                button5 = findViewById(R.id.button5),
-                button6 = findViewById(R.id.button6),
-                button7 = findViewById(R.id.button7),
-                button8 = findViewById(R.id.button8),
-                button9 = findViewById(R.id.button9),
-                buttonEquals = findViewById(R.id.buttonEquals),
-                buttonClear = findViewById(R.id.buttonClear),
-                buttonPlus = findViewById(R.id.buttonPlus),
-                buttonMinus = findViewById(R.id.buttonMinus);
+        textViewCalculatorOutput = findViewById(R.id.textViewCalculatorOutput);
+        TextView buttonEquals = findViewById(R.id.buttonEquals);
+        TextView buttonClear = findViewById(R.id.buttonClear);
+        TextView buttonPlus = findViewById(R.id.buttonPlus);
+        TextView buttonMinus = findViewById(R.id.buttonMinus);
         View buttonBackSpace = findViewById(R.id.buttonBackSpace);
+        TextView[] digitButtons = new TextView[]{
+                findViewById(R.id.button0),
+                findViewById(R.id.button1),
+                findViewById(R.id.button2),
+                findViewById(R.id.button3),
+                findViewById(R.id.button4),
+                findViewById(R.id.button5),
+                findViewById(R.id.button6),
+                findViewById(R.id.button7),
+                findViewById(R.id.button8),
+                findViewById(R.id.button9)
+        };
 
-    /*
-    TODO:
-    - initial update main text-view based on calculator's output
-    - set click listeners on all buttons to operate on the calculator and refresh main text-view
-     */
+        // initial update main text-view based on calculator's output
+        textViewCalculatorOutput.setText(calculator.output());
+
+        // set click listeners on all buttons to operate on the calculator and refresh main text-view
+        for (int i = 0; i < 10; ++i) {
+            final int finalI = i;
+            digitButtons[i].setOnClickListener(v -> {
+                calculator.insertDigit(finalI);
+                textViewCalculatorOutput.setText(calculator.output());
+            });
+        }
+
+        buttonClear.setOnClickListener(v -> {
+            calculator.clear();
+            textViewCalculatorOutput.setText(calculator.output());
+        });
+        buttonMinus.setOnClickListener(v -> {
+            calculator.insertMinus();
+            textViewCalculatorOutput.setText(calculator.output());
+        });
+        buttonPlus.setOnClickListener(v -> {
+            calculator.insertPlus();
+            textViewCalculatorOutput.setText(calculator.output());
+        });
+        buttonEquals.setOnClickListener(v -> {
+            calculator.insertEquals();
+            textViewCalculatorOutput.setText(calculator.output());
+        });
+        buttonBackSpace.setOnClickListener(v -> {
+            calculator.deleteLast();
+            textViewCalculatorOutput.setText(calculator.output());
+        });
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        // todo: save calculator state into the bundle
+        outState.putSerializable(DEFAULT_STATE, calculator.saveState());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         // todo: restore calculator state from the bundle, refresh main text-view from calculator's output
+        calculator.loadState(savedInstanceState.getSerializable(DEFAULT_STATE));
+        textViewCalculatorOutput.setText(calculator.output());
     }
 }

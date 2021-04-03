@@ -101,13 +101,6 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
     }
 
     private static class CalculatorState implements Serializable {
-        /*
-        all fields must only be from the types:
-        - primitives (e.g. int, boolean, etc)
-        - String
-        - ArrayList<> where the type is a primitive or a String
-        - HashMap<> where the types are primitives or a String
-         */
         public String stateStr;
         public boolean isLastOperatorMinus;
         public LinkedList<Integer> values;
