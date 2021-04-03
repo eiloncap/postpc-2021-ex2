@@ -22,8 +22,13 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
         if (digit < 0 || digit > 9) {
             throw new IllegalArgumentException("Digit must be a number between 0 to 9.");
         }
+        boolean lastValueIsZero = values.peek() == 0 && stateStr.endsWith("0");
         String digitAsString = Integer.toString(digit);
-        stateStr = stateStr.equals(DEFAULT_STATE) ? digitAsString : stateStr + digitAsString;
+        if (lastValueIsZero) {
+            if (digit == 0) return;
+            stateStr = stateStr.substring(0, stateStr.length() - 1) + digitAsString;
+        }
+        else stateStr += digitAsString;
         int val = (values.pop() * 10) + (isLastOperatorMinus ? -digit : digit);
         values.push(val);
     }
