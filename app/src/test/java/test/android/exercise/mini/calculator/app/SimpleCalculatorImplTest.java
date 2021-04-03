@@ -71,16 +71,16 @@ public class SimpleCalculatorImplTest {
   }
 
   @Test
-  public void when_inputIsDigitAfterEquals_then_digitShouldReset(){
+  public void when_inputIsDigitAfterEquals_then_digitShouldContinueLastOutput(){
     SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
     calculatorUnderTest.insertDigit(1);
     calculatorUnderTest.insertMinus();
     calculatorUnderTest.insertDigit(2);
     calculatorUnderTest.insertEquals();
     calculatorUnderTest.insertDigit(4);
-    assertEquals("4", calculatorUnderTest.output());
+    assertEquals("-14", calculatorUnderTest.output());
     calculatorUnderTest.insertEquals();
-    String expected = "4";
+    String expected = "-14";
     assertEquals(expected, calculatorUnderTest.output());
   }
 
@@ -110,15 +110,89 @@ public class SimpleCalculatorImplTest {
     }
   }
 
-
   @Test
   public void when_callingDeleteLast_then_lastOutputShouldBeDeleted(){
-    // todo: implement test
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.deleteLast();
+    String expected = "0";
+    assertEquals(expected, calculatorUnderTest.output());
+
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertDigit(2);
+    calculatorUnderTest.deleteLast();
+    expected = "1";
+    assertEquals(expected, calculatorUnderTest.output());
+
+    calculatorUnderTest.insertDigit(2);
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(3);
+    calculatorUnderTest.deleteLast();
+    expected = "12+";
+    assertEquals(expected, calculatorUnderTest.output());
+
+    calculatorUnderTest.deleteLast();
+    expected = "12";
+    assertEquals(expected, calculatorUnderTest.output());
+
+    calculatorUnderTest.insertMinus();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertEquals();
+    expected = "11";
+    assertEquals(expected, calculatorUnderTest.output());
+
+    calculatorUnderTest.deleteLast();
+    expected = "1";
+    assertEquals(expected, calculatorUnderTest.output());
+    calculatorUnderTest.insertEquals();
+    assertEquals(expected, calculatorUnderTest.output());
+
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(2);
+    expected = "1+2";
+    assertEquals(expected, calculatorUnderTest.output());
+    calculatorUnderTest.insertEquals();
+    expected = "3";
+    assertEquals(expected, calculatorUnderTest.output());
+  }
+
+  @Test
+  public void when_zeroIsBetweenOperators_then_isNotIgnored(){
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertDigit(3);
+    calculatorUnderTest.insertMinus();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertDigit(3);
+    calculatorUnderTest.insertEquals();
+    assertEquals("0", calculatorUnderTest.output());
+
+    calculatorUnderTest.insertDigit(2);
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(0);
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(9);
+    calculatorUnderTest.deleteLast();
+    calculatorUnderTest.deleteLast();
+    calculatorUnderTest.insertEquals();
+    assertEquals("21", calculatorUnderTest.output());
   }
 
   @Test
   public void when_callingClear_then_outputShouldBeCleared(){
-    // todo: implement test
+    SimpleCalculatorImpl calculatorUnderTest = new SimpleCalculatorImpl();
+    calculatorUnderTest.insertDigit(1);
+    calculatorUnderTest.insertMinus();
+    calculatorUnderTest.insertDigit(2);
+    calculatorUnderTest.insertEquals();
+    calculatorUnderTest.insertPlus();
+    calculatorUnderTest.insertDigit(4);
+    calculatorUnderTest.clear();
+    String expected = "0";
+    assertEquals(expected, calculatorUnderTest.output());
+    calculatorUnderTest.insertEquals();
+    assertEquals(expected, calculatorUnderTest.output());
   }
 
   @Test

@@ -1,15 +1,18 @@
 package android.exercise.mini.calculator.app;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class SimpleCalculatorImpl implements SimpleCalculator {
 
-    // todo: add fields as needed
     private final static String DEFAULT_STATE = "0";
 
     private String stateStr = DEFAULT_STATE;
-    private int calculatedValue = 0, lastValue = 0;
-    private boolean isLAstOperatorMinus = false, init = true;
+    private boolean isLastOperatorMinus = false;
+    private final LinkedList<Integer> values = new LinkedList<>(Collections.singletonList(0));
 
     @Override
     public String output() {
@@ -17,25 +20,22 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
     }
 
     @Override
-    public void insertDigit(int digit) throws IllegalArgumentException{
+    public void insertDigit(int digit) throws IllegalArgumentException {
         if (digit < 0 || digit > 9) {
             throw new IllegalArgumentException("Digit must be a number between 0 to 9.");
         }
         String digitAsString = Integer.toString(digit);
-        int sign = lastValue >= 0 ? 1 : -1;
-        if (init) calculatedValue = 0;
-        stateStr = init ? digitAsString : stateStr + digitAsString;
-        lastValue = (lastValue * 10) + digit * sign;
-        init = false;
+        stateStr = stateStr.equals(DEFAULT_STATE) ? digitAsString : stateStr + digitAsString;
+        int val = (values.pop() * 10) + (isLastOperatorMinus ? -digit : digit);
+        values.push(val);
     }
 
     @Override
     public void insertPlus() {
         if (Character.isDigit(stateStr.charAt(stateStr.length() - 1))) {
             stateStr += "+";
-            calculateLastOperator();
-            isLAstOperatorMinus = false;
-            init = false;
+            values.push(0);
+            isLastOperatorMinus = false;
         }
     }
 
@@ -43,37 +43,43 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
     public void insertMinus() {
         if (Character.isDigit(stateStr.charAt(stateStr.length() - 1))) {
             stateStr += "-";
-            calculateLastOperator();
-            isLAstOperatorMinus = true;
-            init = false;
+            values.push(0);
+            isLastOperatorMinus = true;
         }
     }
 
     @Override
     public void insertEquals() {
-        calculateLastOperator();
-        isLAstOperatorMinus = false;
-        stateStr = Integer.toString(calculatedValue);
-        init = true;
-    }
-
-    private void calculateLastOperator() {
-        calculatedValue += isLAstOperatorMinus ? -lastValue : lastValue;
-        lastValue = 0;
+        int sum = 0;
+        while (!values.isEmpty()) {
+            sum += values.pop();
+        }
+        values.push(sum);
+        isLastOperatorMinus = (sum < 0);
+        stateStr = Integer.toString(sum);
     }
 
     @Override
     public void deleteLast() {
-        // todo: delete the last input (digit, plus or minus)
-        //  e.g.
-        //  if input was "12+3" and called `deleteLast()`, then delete the "3"
-        //  if input was "12+" and called `deleteLast()`, then delete the "+"
-        //  if no input was given, then there is nothing to do here
+        if (stateStr.length() == 1) {
+            clear();
+        } else {
+            char deletedChar = stateStr.charAt(stateStr.length() - 1);
+            stateStr = stateStr.substring(0, stateStr.length() - 1);
+            isLastOperatorMinus = (stateStr.lastIndexOf('-') > stateStr.lastIndexOf('+'));
+            int lastValue = values.pop();
+            if (Character.isDigit(deletedChar)) {
+                values.push(lastValue / 10);
+            }
+        }
     }
 
     @Override
     public void clear() {
-        // todo: clear everything (same as no-input was never given)
+        stateStr = DEFAULT_STATE;
+        values.clear();
+        values.push(0);
+        isLastOperatorMinus = false;
     }
 
     @Override
