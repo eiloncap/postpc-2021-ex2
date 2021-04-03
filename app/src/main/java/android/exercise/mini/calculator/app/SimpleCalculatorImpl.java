@@ -1,8 +1,6 @@
 package android.exercise.mini.calculator.app;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -12,7 +10,7 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
 
     private String stateStr = DEFAULT_STATE;
     private boolean isLastOperatorMinus = false;
-    private final LinkedList<Integer> values = new LinkedList<>(Collections.singletonList(0));
+    private LinkedList<Integer> values = new LinkedList<>(Collections.singletonList(0));
 
     @Override
     public String output() {
@@ -85,7 +83,9 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
     @Override
     public Serializable saveState() {
         CalculatorState state = new CalculatorState();
-        // todo: insert all data to the state, so in the future we can load from this state
+        state.stateStr = stateStr;
+        state.isLastOperatorMinus = isLastOperatorMinus;
+        state.values = values;
         return state;
     }
 
@@ -95,17 +95,22 @@ public class SimpleCalculatorImpl implements SimpleCalculator {
             return; // ignore
         }
         CalculatorState casted = (CalculatorState) prevState;
-        // todo: use the CalculatorState to load
+        stateStr = casted.stateStr;
+        isLastOperatorMinus = casted.isLastOperatorMinus;
+        values = casted.values;
     }
 
     private static class CalculatorState implements Serializable {
-    /*
-    TODO: add fields to this class that will store the calculator state
-    all fields must only be from the types:
-    - primitives (e.g. int, boolean, etc)
-    - String
-    - ArrayList<> where the type is a primitive or a String
-    - HashMap<> where the types are primitives or a String
-     */
+        /*
+        TODO: add fields to this class that will store the calculator state
+        all fields must only be from the types:
+        - primitives (e.g. int, boolean, etc)
+        - String
+        - ArrayList<> where the type is a primitive or a String
+        - HashMap<> where the types are primitives or a String
+         */
+        public String stateStr;
+        public boolean isLastOperatorMinus;
+        public LinkedList<Integer> values;
     }
 }
