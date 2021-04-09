@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        // todo: restore calculator state from the bundle, refresh main text-view from calculator's output
         calculator.loadState(savedInstanceState.getSerializable(DEFAULT_STATE));
         textViewCalculatorOutput.setText(calculator.output());
     }
