@@ -23,8 +23,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         if (calculator == null) {
             calculator = new SimpleCalculatorImpl();
+        }
+        if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState);
         }
 
         // find all views

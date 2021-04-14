@@ -10,14 +10,16 @@ Answer: Obviously we will need to add insertMult() function in SimpleCalculatorI
         by remembering also the operators and actually handling each operator differently in
         insertEquals() (Right now I am just keeping a linkedList containing only the numbers,
         while keeping numbers that coming after a minus operator as negative numbers and then
-        summing the list). I guess that adding parentheses buttons will be required as well.
+        summing the list). I guess that adding parentheses buttons will be nice as well.
 
-        SimpleCalculatorImplTest should be run on the calculator - test that ensures that the
-        calculator behaves as desired, and is correct mathematically (logically).
+        Calculator tests - We can run test for multiplication by 0, test for multiplication of
+        negative numbers, test checking correct order of operations. Tests for calculator behaviour
+        when calling insertMult() twice, or calling insertMult() before/after insertPlus(),
+        insertMinus(), insertEquals(). Testing a call to insertMult() before any other function was
+        called.
 
-        MainActivityTest should be run on the activity - test that ensures that all GUI part work
-        fine, that buttons call the right functions, and that the TextView is updated as desired.
+        Activity tests - Check that clicking the X button will call insertMult() function, and tests
+        checking that saving state involving multiplication works well.
 
-        AppFlowTest should be run on the app - test that ensures that the "glue" between the
-        activity and the calculator is working well, for example clicking a buttons sequence
-        supposed to give an output as expected from the calculator.
+        App tests - Tests performing sequences of buttons clicks that involve multiplication and
+        checking the output, including edge cases as mentioned for the calculator tests.
