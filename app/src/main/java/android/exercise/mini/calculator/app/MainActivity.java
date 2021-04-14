@@ -1,6 +1,7 @@
 package android.exercise.mini.calculator.app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,12 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         if (calculator == null) {
             calculator = new SimpleCalculatorImpl();
-        }
-        if (savedInstanceState != null) {
-            onRestoreInstanceState(savedInstanceState);
         }
 
         // find all views
@@ -52,7 +49,11 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // initial update main text-view based on calculator's output
-        textViewCalculatorOutput.setText(calculator.output());
+        if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState); // updates textViewCalculatorOutput anyway
+        } else {
+            textViewCalculatorOutput.setText(calculator.output());
+        }
 
         // set click listeners on all buttons to operate on the calculator and refresh main text-view
         for (int i = 0; i < 10; ++i) {
